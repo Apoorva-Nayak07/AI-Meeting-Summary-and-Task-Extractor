@@ -4,6 +4,26 @@
 
 Never miss a decision again. Upload meetings, get transcripts, summaries, tasks & follow-up notes in seconds.
 
+## Screenshots
+
+### Landing page
+![Login](landing_page.png)
+
+### Dashboard
+![Dashboard](dashboard.png)
+
+### Upload
+![Dashboard](upload.png)
+
+### History
+![Dashboard](history.png)
+
+### Analytics
+![Dashboard](analytics.png)
+
+### Profile Section
+![Dashboard](profile.png)
+
 ## ✨ Features
 
 - 🎤 **Audio/Video Transcription** - Whisper API powered speech-to-text
