@@ -1,11 +1,13 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   Mic, Brain, CheckCircle, Mail, TrendingUp, Users, 
-  Clock, Zap, Shield, Globe, ArrowRight, Star 
+  Clock, Zap, Shield, Globe, ArrowRight, Star, X, Play 
 } from 'lucide-react';
 
 const Landing = () => {
+  const [showDemo, setShowDemo] = useState(false);
   const features = [
     {
       icon: <Mic className="w-8 h-8" />,
@@ -92,8 +94,11 @@ const Landing = () => {
               >
                 Get Started Free <ArrowRight className="w-5 h-5" />
               </Link>
-              <button className="px-8 py-4 glass rounded-lg text-lg font-semibold glass-hover flex items-center justify-center gap-2">
-                <Zap className="w-5 h-5" /> Watch Demo
+              <button 
+                onClick={() => setShowDemo(true)}
+                className="px-8 py-4 glass rounded-lg text-lg font-semibold glass-hover flex items-center justify-center gap-2"
+              >
+                <Play className="w-5 h-5" /> Watch Demo
               </button>
             </div>
           </motion.div>
@@ -266,6 +271,216 @@ const Landing = () => {
           <p>© 2024 AI Meeting Assistant. Built with ❤️ for productivity.</p>
         </div>
       </footer>
+
+      {/* Demo Modal */}
+      <AnimatePresence>
+        {showDemo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={() => setShowDemo(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto glass rounded-2xl p-8"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowDemo(false)}
+                className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              {/* Demo Content */}
+              <div className="space-y-8">
+                <div className="text-center">
+                  <h2 className="text-4xl font-bold mb-4">
+                    See <span className="gradient-text">AI Meeting Assistant</span> in Action
+                  </h2>
+                  <p className="text-xl text-gray-400">
+                    Watch how we transform meetings into actionable insights
+                  </p>
+                </div>
+
+                {/* Demo Steps */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Step 1 */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="glass rounded-xl p-6"
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span className="text-2xl font-bold text-blue-400">1</span>
+                      </div>
+                      <h3 className="text-xl font-semibold">Upload Meeting</h3>
+                    </div>
+                    <div className="bg-gray-900/50 rounded-lg p-4 mb-3">
+                      <div className="flex items-center gap-3 mb-2">
+                        <Mic className="w-8 h-8 text-blue-400" />
+                        <div>
+                          <div className="font-semibold">Q4_Planning.mp3</div>
+                          <div className="text-sm text-gray-400">2.4 MB • 5:30 min</div>
+                        </div>
+                      </div>
+                      <div className="w-full bg-gray-800 rounded-full h-2">
+                        <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full w-full"></div>
+                      </div>
+                    </div>
+                    <p className="text-gray-400 text-sm">
+                      Drag & drop or select audio/video files. Supports MP3, WAV, M4A, MP4.
+                    </p>
+                  </motion.div>
+
+                  {/* Step 2 */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="glass rounded-xl p-6"
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+                        <span className="text-2xl font-bold text-purple-400">2</span>
+                      </div>
+                      <h3 className="text-xl font-semibold">AI Processing</h3>
+                    </div>
+                    <div className="bg-gray-900/50 rounded-lg p-4 mb-3 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-green-400" />
+                        <span className="text-sm">Transcribing with Whisper AI...</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-green-400" />
+                        <span className="text-sm">Analyzing with GPT-4...</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm">Extracting insights...</span>
+                      </div>
+                    </div>
+                    <p className="text-gray-400 text-sm">
+                      AI processes your meeting in ~60 seconds using OpenAI's latest models.
+                    </p>
+                  </motion.div>
+
+                  {/* Step 3 */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="glass rounded-xl p-6"
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
+                        <span className="text-2xl font-bold text-green-400">3</span>
+                      </div>
+                      <h3 className="text-xl font-semibold">Get Summary</h3>
+                    </div>
+                    <div className="bg-gray-900/50 rounded-lg p-4 mb-3 space-y-2 text-sm">
+                      <div className="font-semibold text-blue-400">Executive Summary:</div>
+                      <p className="text-gray-300">
+                        Team discussed Q4 goals and decided to focus on customer acquisition...
+                      </p>
+                      <div className="font-semibold text-green-400 mt-3">Key Decisions:</div>
+                      <ul className="text-gray-300 space-y-1">
+                        <li>• Approved 20% budget increase</li>
+                        <li>• Launch campaign by month end</li>
+                      </ul>
+                    </div>
+                    <p className="text-gray-400 text-sm">
+                      Get executive summary, key points, decisions, and risks identified.
+                    </p>
+                  </motion.div>
+
+                  {/* Step 4 */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="glass rounded-xl p-6"
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center">
+                        <span className="text-2xl font-bold text-orange-400">4</span>
+                      </div>
+                      <h3 className="text-xl font-semibold">Extract Tasks</h3>
+                    </div>
+                    <div className="bg-gray-900/50 rounded-lg p-4 mb-3 space-y-2">
+                      <div className="flex items-center justify-between p-2 bg-red-500/10 rounded">
+                        <span className="text-sm">Launch marketing campaign</span>
+                        <span className="text-xs px-2 py-1 bg-red-500/20 text-red-300 rounded">HIGH</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-yellow-500/10 rounded">
+                        <span className="text-sm">Hire 2 specialists</span>
+                        <span className="text-xs px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded">MED</span>
+                      </div>
+                      <div className="text-xs text-gray-400 mt-2">
+                        👤 Sarah • 📅 May 31, 2024
+                      </div>
+                    </div>
+                    <p className="text-gray-400 text-sm">
+                      Tasks automatically extracted with assignees, priorities, and deadlines.
+                    </p>
+                  </motion.div>
+                </div>
+
+                {/* Additional Features */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="glass rounded-xl p-6"
+                >
+                  <h3 className="text-2xl font-semibold mb-4 text-center">Plus More Amazing Features</h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="text-center p-4">
+                      <Mail className="w-10 h-10 text-blue-400 mx-auto mb-2" />
+                      <div className="font-semibold mb-1">Email Drafts</div>
+                      <div className="text-sm text-gray-400">Auto-generated follow-up emails</div>
+                    </div>
+                    <div className="text-center p-4">
+                      <Brain className="w-10 h-10 text-purple-400 mx-auto mb-2" />
+                      <div className="font-semibold mb-1">AI Chat</div>
+                      <div className="text-sm text-gray-400">Ask questions about meetings</div>
+                    </div>
+                    <div className="text-center p-4">
+                      <TrendingUp className="w-10 h-10 text-green-400 mx-auto mb-2" />
+                      <div className="font-semibold mb-1">Analytics</div>
+                      <div className="text-sm text-gray-400">Track productivity metrics</div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* CTA */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                  className="text-center"
+                >
+                  <Link
+                    to="/register"
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition"
+                  >
+                    Start Free Now <ArrowRight className="w-5 h-5" />
+                  </Link>
+                  <p className="text-gray-400 mt-4">No credit card required • 5 minutes to set up</p>
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Authentication</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 { color: #60a5fa; }
+        h2 { color: #a78bfa; margin-top: 30px; }
+        button {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { opacity: 0.9; }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background: #333;
+            color: #fff;
+            font-size: 14px;
+        }
+        .result {
+            background: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .info { color: #60a5fa; }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Authentication Test Tool</h1>
+        <p>Test your backend authentication endpoints</p>
+    </div>
+
+    <div class="container">
+        <h2>1. Test Backend Connection</h2>
+        <button onclick="testBackend()">Test Health Endpoint</button>
+        <div id="backendResult" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>2. Test Registration</h2>
+        <label>Name:</label>
+        <input type="text" id="regName" value="Test User" />
+        <label>Email:</label>
+        <input type="email" id="regEmail" value="" placeholder="test@example.com" />
+        <label>Password:</label>
+        <input type="password" id="regPassword" value="password123" />
+        <button onclick="testRegister()">Register</button>
+        <div id="registerResult" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>3. Test Login</h2>
+        <label>Email:</label>
+        <input type="email" id="loginEmail" value="" placeholder="test@example.com" />
+        <label>Password:</label>
+        <input type="password" id="loginPassword" value="password123" />
+        <button onclick="testLogin()">Login</button>
+        <div id="loginResult" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>4. Configuration</h2>
+        <label>API URL:</label>
+        <input type="text" id="apiUrl" value="http://localhost:5000/api" />
+        <button onclick="saveConfig()">Save Config</button>
+        <p class="info">Current API URL: <span id="currentUrl">http://localhost:5000/api</span></p>
+    </div>
+
+    <script>
+        let API_URL = localStorage.getItem('apiUrl') || 'http://localhost:5000/api';
+        document.getElementById('apiUrl').value = API_URL;
+        document.getElementById('currentUrl').textContent = API_URL;
+
+        // Generate random email for testing
+        document.getElementById('regEmail').value = `test${Date.now()}@example.com`;
+        document.getElementById('loginEmail').value = document.getElementById('regEmail').value;
+
+        function saveConfig() {
+            API_URL = document.getElementById('apiUrl').value;
+            localStorage.setItem('apiUrl', API_URL);
+            document.getElementById('currentUrl').textContent = API_URL;
+            alert('Configuration saved!');
+        }
+
+        async function testBackend() {
+            const resultDiv = document.getElementById('backendResult');
+            resultDiv.innerHTML = '<span class="info">Testing...</span>';
+            
+            try {
+                const response = await fetch(`${API_URL}/../health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<span class="success">✅ Backend is working!</span>\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.innerHTML = `<span class="error">❌ Backend returned error</span>\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Connection failed!</span>\n${error.message}\n\nMake sure backend is running: npm run dev`;
+            }
+        }
+
+        async function testRegister() {
+            const resultDiv = document.getElementById('registerResult');
+            resultDiv.innerHTML = '<span class="info">Registering...</span>';
+            
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            if (!name || !email || !password) {
+                resultDiv.innerHTML = '<span class="error">❌ Please fill all fields</span>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `<span class="success">✅ Registration successful!</span>\n${JSON.stringify(data, null, 2)}`;
+                    // Update login fields
+                    document.getElementById('loginEmail').value = email;
+                    document.getElementById('loginPassword').value = password;
+                    // Save token
+                    if (data.data && data.data.token) {
+                        localStorage.setItem('token', data.data.token);
+                    }
+                } else {
+                    resultDiv.innerHTML = `<span class="error">❌ Registration failed</span>\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Request failed!</span>\n${error.message}\n\nMake sure backend is running on port 5000`;
+            }
+        }
+
+        async function testLogin() {
+            const resultDiv = document.getElementById('loginResult');
+            resultDiv.innerHTML = '<span class="info">Logging in...</span>';
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                resultDiv.innerHTML = '<span class="error">❌ Please fill all fields</span>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `<span class="success">✅ Login successful!</span>\n${JSON.stringify(data, null, 2)}`;
+                    // Save token
+                    if (data.data && data.data.token) {
+                        localStorage.setItem('token', data.data.token);
+                    }
+                } else {
+                    resultDiv.innerHTML = `<span class="error">❌ Login failed</span>\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Request failed!</span>\n${error.message}\n\nMake sure backend is running on port 5000`;
+            }
+        }
+
+        // Auto-test on load
+        window.onload = () => {
+            testBackend();
+        };
+    </script>
+</body>
+</html>

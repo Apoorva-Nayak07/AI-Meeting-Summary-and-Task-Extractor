@@ -1,13 +1,13 @@
 import Meeting from '../models/Meeting.js';
 import User from '../models/User.js';
-import OpenAI from 'openai';
 import fs from 'fs';
 import path from 'path';
 
-// Lazy initialization of OpenAI client
+// Lazy initialization of OpenAI client - import dynamically to prevent startup crashes
 let openai = null;
-const getOpenAI = () => {
+const getOpenAI = async () => {
   if (!openai && process.env.OPENAI_API_KEY) {
+    const { default: OpenAI } = await import('openai');
     openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
@@ -81,7 +81,7 @@ export const processMeeting = async (req, res) => {
     const startTime = Date.now();
 
     try {
-      const openaiClient = getOpenAI();
+      const openaiClient = await getOpenAI();
       if (!openaiClient) {
         throw new Error('OpenAI API key not configured');
       }
@@ -351,7 +351,7 @@ export const chatWithMeeting = async (req, res) => {
       });
     }
 
-    const openaiClient = getOpenAI();
+    const openaiClient = await getOpenAI();
     if (!openaiClient) {
       return res.status(500).json({
         success: false,
