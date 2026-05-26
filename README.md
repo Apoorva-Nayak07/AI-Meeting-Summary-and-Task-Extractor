@@ -95,21 +95,6 @@ VITE_API_URL=http://localhost:5000/api
 npm run dev
 ```
 
-Frontend: http://localhost:5173
-Backend: http://localhost:5000
-
-## 🚀 Deployment
-
-### Frontend (Vercel)
-```bash
-cd frontend
-vercel --prod
-```
-
-### Backend (Render/Railway)
-- Connect GitHub repo
-- Set environment variables
-- Deploy
 
 ## 📁 Project Structure
 
