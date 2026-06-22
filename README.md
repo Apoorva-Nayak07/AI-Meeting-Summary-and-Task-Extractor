@@ -15,7 +15,7 @@ Never miss a decision again. Upload meetings, get transcripts, summaries, tasks 
 ### Upload
 ![Dashboard](upload.png) 
 
-### History
+### History 
 ![Dashboard](history.png)
 
 ### Analytics
