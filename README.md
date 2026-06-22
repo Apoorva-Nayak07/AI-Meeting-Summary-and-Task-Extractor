@@ -7,7 +7,7 @@ Never miss a decision again. Upload meetings, get transcripts, summaries, tasks 
 ## Screenshots
 
 ### Landing page
-![Login](landing_page.png)
+![Login](landing_page.png) 
 
 ### Dashboard
 ![Dashboard](dashboard.png)
