@@ -3,7 +3,7 @@
 ## Premium AI-Powered Meeting Assistant Platform
   
 Never miss a decision again. Upload meetings, get transcripts, summaries, tasks & follow-up notes in seconds.
-
+ 
 ## Screenshots
 
 ### Landing page
